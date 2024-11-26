@@ -101,7 +101,14 @@ func (s *Store) Len(ctx context.Context) (int64, error) {
 }
 
 // Close implements part of the [blob.Store] interface.
-func (s *Store) Close(_ context.Context) error { return s.db.Close() }
+func (s *Store) Close(_ context.Context) error {
+	merr := s.db.Merge(false)
+	if errors.Is(merr, rosedb.ErrDBClosed) {
+		merr = nil
+	}
+	cerr := s.db.Close()
+	return errors.Join(merr, cerr)
+}
 
 // Options provide options for opening a rosedb database.
 // A nil *Options is ready for use and provides default values.
