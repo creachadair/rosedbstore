@@ -1,3 +1,5 @@
+// Copyright (C) 2024 Michael J. Fromberger. All Rights Reserved.
+
 // Package rosedbstore implements the blob.Store interfaace using [rosedb].
 //
 // [rosedb]: https://github.com/rosedblabs/rosedb
