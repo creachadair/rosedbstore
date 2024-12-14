@@ -3,13 +3,13 @@ module github.com/creachadair/rosedbstore
 go 1.23.3
 
 require (
-	github.com/creachadair/ffs v0.6.8
+	github.com/creachadair/ffs v0.7.0
 	github.com/rosedblabs/rosedb/v2 v2.3.9
 )
 
 require (
 	github.com/bwmarrin/snowflake v0.3.0 // indirect
-	github.com/creachadair/mds v0.21.4 // indirect
+	github.com/creachadair/mds v0.22.0 // indirect
 	github.com/gofrs/flock v0.8.1 // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect

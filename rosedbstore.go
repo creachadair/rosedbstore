@@ -1,6 +1,6 @@
 // Copyright (C) 2024 Michael J. Fromberger. All Rights Reserved.
 
-// Package rosedbstore implements the [blob.Store] interfaace using [rosedb].
+// Package rosedbstore implements the [blob.KV] interfaace using [rosedb].
 //
 // [rosedb]: https://github.com/rosedblabs/rosedb
 package rosedbstore
@@ -13,16 +13,16 @@ import (
 	"github.com/rosedblabs/rosedb/v2"
 )
 
-// Store implements the [blob.Store] interface using a rosedb database.
-type Store struct {
+// KV implements the [blob.KV] interface using a rosedb database.
+type KV struct {
 	db *rosedb.DB
 }
 
-// Opener constructs a [Store] from an address comprising a path.
-func Opener(_ context.Context, addr string) (blob.Store, error) { return Open(addr, nil) }
+// Opener constructs a [KV] from an address comprising a path.
+func Opener(_ context.Context, addr string) (blob.KV, error) { return Open(addr, nil) }
 
-// Open creates a [Store] by opening the rosedb database at path.
-func Open(path string, opts *Options) (*Store, error) {
+// Open creates a [KV] by opening the rosedb database at path.
+func Open(path string, opts *Options) (*KV, error) {
 	db, err := rosedb.Open(rosedb.Options{
 		DirPath:           path,
 		SegmentSize:       1 << 30,
@@ -31,11 +31,11 @@ func Open(path string, opts *Options) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Store{db: db}, nil
+	return &KV{db: db}, nil
 }
 
-// Get implements part of the [blob.Store] interface.
-func (s *Store) Get(ctx context.Context, key string) ([]byte, error) {
+// Get implements part of the [blob.KV] interface.
+func (s *KV) Get(ctx context.Context, key string) ([]byte, error) {
 	if key == "" {
 		return nil, blob.ErrKeyNotFound
 	}
@@ -48,8 +48,8 @@ func (s *Store) Get(ctx context.Context, key string) ([]byte, error) {
 	return data, nil
 }
 
-// Put implements part of the [blob.Store] interface.
-func (s *Store) Put(ctx context.Context, opts blob.PutOptions) error {
+// Put implements part of the [blob.KV] interface.
+func (s *KV) Put(ctx context.Context, opts blob.PutOptions) error {
 	if opts.Key == "" {
 		return blob.ErrKeyNotFound
 	}
@@ -65,8 +65,8 @@ func (s *Store) Put(ctx context.Context, opts blob.PutOptions) error {
 	return s.db.Put(bkey, opts.Data)
 }
 
-// Delete implements part of the [blob.Store] interface.
-func (s *Store) Delete(ctx context.Context, key string) error {
+// Delete implements part of the [blob.KV] interface.
+func (s *KV) Delete(ctx context.Context, key string) error {
 	if key == "" {
 		return blob.ErrKeyNotFound
 	}
@@ -80,8 +80,8 @@ func (s *Store) Delete(ctx context.Context, key string) error {
 	return s.db.Delete(bkey)
 }
 
-// List implements part of the [blob.Store] interface.
-func (s *Store) List(ctx context.Context, start string, f func(string) error) error {
+// List implements part of the [blob.KV] interface.
+func (s *KV) List(ctx context.Context, start string, f func(string) error) error {
 	var ferr error
 	s.db.AscendGreaterOrEqual([]byte(start), func(key, _ []byte) (bool, error) {
 		if err := f(string(key)); errors.Is(err, blob.ErrStopListing) {
@@ -95,13 +95,13 @@ func (s *Store) List(ctx context.Context, start string, f func(string) error) er
 	return ferr
 }
 
-// Len implements part of the [blob.Store] interface.
-func (s *Store) Len(ctx context.Context) (int64, error) {
+// Len implements part of the [blob.KV] interface.
+func (s *KV) Len(ctx context.Context) (int64, error) {
 	return int64(s.db.Stat().KeysNum), nil
 }
 
-// Close implements part of the [blob.Store] interface.
-func (s *Store) Close(_ context.Context) error {
+// Close implements part of the [blob.KV] interface.
+func (s *KV) Close(_ context.Context) error {
 	merr := s.db.Merge(false)
 	if errors.Is(merr, rosedb.ErrDBClosed) {
 		merr = nil
