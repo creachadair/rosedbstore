@@ -51,8 +51,11 @@ func Open(path string, opts *Options) (Store, error) {
 	if err != nil {
 		return Store{}, err
 	}
-	return Store{M: monitor.New(db, "", func(c monitor.Config[*rosedb.DB]) KV {
-		return KV{db: c.DB, prefix: c.Prefix}
+	return Store{M: monitor.New(monitor.Config[*rosedb.DB, KV]{
+		DB: db,
+		NewKV: func(_ context.Context, db *rosedb.DB, pfx dbkey.Prefix, _ string) (KV, error) {
+			return KV{db: db, prefix: pfx}, nil
+		},
 	})}, nil
 }
 
