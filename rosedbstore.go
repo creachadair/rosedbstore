@@ -73,6 +73,21 @@ func (s KV) Get(ctx context.Context, key string) ([]byte, error) {
 	return data, nil
 }
 
+// Stat implements part of the [blob.KV] interface.
+func (s KV) Stat(ctx context.Context, keys ...string) (blob.StatMap, error) {
+	out := make(blob.StatMap)
+	for _, key := range keys {
+		data, err := s.db.Get([]byte(s.prefix.Add(key)))
+		if errors.Is(err, rosedb.ErrKeyNotFound) {
+			continue
+		} else if err != nil {
+			return nil, err
+		}
+		out[key] = blob.Stat{Size: int64(len(data))}
+	}
+	return out, nil
+}
+
 // Put implements part of the [blob.KV] interface.
 func (s KV) Put(ctx context.Context, opts blob.PutOptions) error {
 	if opts.Key == "" {
