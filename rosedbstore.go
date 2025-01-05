@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"iter"
 
 	"github.com/creachadair/ffs/blob"
 	"github.com/creachadair/ffs/storage/dbkey"
@@ -121,33 +122,32 @@ func (s KV) Delete(ctx context.Context, key string) error {
 }
 
 // List implements part of the [blob.KV] interface.
-func (s KV) List(ctx context.Context, start string, f func(string) error) error {
-	var ferr error
-	bstart := []byte(s.prefix.Add(start))
-	s.db.AscendGreaterOrEqual(bstart, func(key, _ []byte) (bool, error) {
-		if !bytes.HasPrefix(key, []byte(s.prefix)) {
-			return false, nil // no longer in our range
-		}
-		dkey := s.prefix.Remove(string(key))
-		if err := f(dkey); errors.Is(err, blob.ErrStopListing) {
-			return false, nil
-		} else if err != nil {
-			ferr = err
-			return false, nil
-		}
-		return true, nil
-	})
-	return ferr
+func (s KV) List(ctx context.Context, start string) iter.Seq2[string, error] {
+	return func(yield func(string, error) bool) {
+		bstart := []byte(s.prefix.Add(start))
+		s.db.AscendGreaterOrEqual(bstart, func(key, _ []byte) (bool, error) {
+			if !bytes.HasPrefix(key, []byte(s.prefix)) {
+				return false, nil // no longer in our range
+			}
+			dkey := s.prefix.Remove(string(key))
+			if !yield(dkey, nil) {
+				return false, nil
+			}
+			return true, nil
+		})
+	}
 }
 
 // Len implements part of the [blob.KV] interface.
 func (s KV) Len(ctx context.Context) (int64, error) {
 	var n int64
-	err := s.List(ctx, "", func(string) error {
+	for _, err := range s.List(ctx, "") {
+		if err != nil {
+			return 0, err
+		}
 		n++
-		return nil
-	})
-	return n, err
+	}
+	return n, nil
 }
 
 // Options provide options for opening a rosedb database.
