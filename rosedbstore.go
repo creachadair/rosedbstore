@@ -28,7 +28,7 @@ type Store struct {
 
 // Close implements part of the [blob.KV] interface.
 func (s Store) Close(_ context.Context) error {
-	merr := s.DB.Merge(false)
+	merr := s.DB.Merge(true)
 	if errors.Is(merr, rosedb.ErrDBClosed) {
 		merr = nil
 	}
