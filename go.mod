@@ -2,8 +2,6 @@ module github.com/creachadair/rosedbstore
 
 go 1.24
 
-toolchain go1.24.2
-
 require (
 	github.com/creachadair/ffs v0.13.16
 	github.com/rosedblabs/rosedb/v2 v2.4.0
