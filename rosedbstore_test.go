@@ -23,7 +23,7 @@ func TestStore(t *testing.T) {
 	path := filepath.Join(dir, "rose.db")
 	t.Logf("Test store: %s", path)
 	if !*keepOutput {
-		defer os.RemoveAll(dir) // best effort cleanup
+		t.Cleanup(func() { os.RemoveAll(dir) })
 	}
 
 	s, err := rosedbstore.Open(path, nil)
