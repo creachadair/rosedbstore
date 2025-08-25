@@ -3,7 +3,7 @@ module github.com/creachadair/rosedbstore
 go 1.24
 
 require (
-	github.com/creachadair/ffs v0.14.1
+	github.com/creachadair/ffs v0.14.3
 	github.com/rosedblabs/rosedb/v2 v2.4.0
 )
 
