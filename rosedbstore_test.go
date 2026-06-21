@@ -35,3 +35,16 @@ func TestStore(t *testing.T) {
 		t.Errorf("Closing store: %v", err)
 	}
 }
+
+func BenchmarkStore(b *testing.B) {
+	path := filepath.Join(b.TempDir(), "benchmark.db")
+	s, err := rosedbstore.Open(path, nil)
+	if err != nil {
+		b.Fatal(err)
+	}
+	kv, err := s.KV(b.Context(), "benchmark")
+	if err != nil {
+		b.Fatalf("KV: %v", err)
+	}
+	storetest.BenchmarkKV(b, kv)
+}
