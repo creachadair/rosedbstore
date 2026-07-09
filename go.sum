@@ -1,9 +1,9 @@
 github.com/bwmarrin/snowflake v0.3.0 h1:xm67bEhkKh6ij1790JB83OujPR5CzNe8QuQqAgISZN0=
 github.com/bwmarrin/snowflake v0.3.0/go.mod h1:NdZxfVWX+oR6y2K0o6qAYv6gIOP9rjG0/E9WsDpxqwE=
-github.com/creachadair/ffs v0.17.12 h1:BQyGcUxYzLnDMkKdgtJ8zqKh7Qf6xGNNSP/amua5Lxs=
-github.com/creachadair/ffs v0.17.12/go.mod h1:PJxrw+HuNUPshQ4wzy3phqlU9rV9wlQj3gKOaviydy4=
-github.com/creachadair/mds v0.29.0 h1:LyR8pWAj2ofsrdJ9s2YoIqN8b6a1djHmPQULD2fTSCA=
-github.com/creachadair/mds v0.29.0/go.mod h1:dMBTCSy3iS3dwh4Rb1zxeZz2d7K8+N24GCTsayWtQRI=
+github.com/creachadair/ffs v0.17.15 h1:AQd0p64yDz5kUz0d/08CFhF6ESR36mz6uW3bizYZQ1A=
+github.com/creachadair/ffs v0.17.15/go.mod h1:i/gqPRHIPlO5cRXHEVvkMuJd/YXJ45C/aQFy6AwF7Fc=
+github.com/creachadair/mds v0.29.2 h1:1IBhfyolZUCA53twI1hXembOdpIe4bJ4OGJELBbGrN4=
+github.com/creachadair/mds v0.29.2/go.mod h1:dMBTCSy3iS3dwh4Rb1zxeZz2d7K8+N24GCTsayWtQRI=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gofrs/flock v0.13.0 h1:95JolYOvGMqeH31+FC7D2+uULf6mG61mEZ/A8dRYMzw=
